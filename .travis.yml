@@ -14,12 +14,3 @@ os:
 
 script:
     - make
-
-deploy:
-    provider: releases
-    api_key: "pBcVrv7hsZ33IPx/z7bzrLPGOBmT79wvbpjZM9WSd+9pZ3Pz76iRKUvtKDjb/NZirBS8aX1mLrWVob2O72h+vVvebmmu6A0ODmNzJHPgGNjfYGb/LRtI29n4ZHSgQSxnXTQWnRCnBd8bScPuugefqfIk7Xbc0d4mDaQK5gN44/+2DPx3DFpo7PZROn7SqHIRivcVhqpaZz/nh0waQpg29xvWbUkXALvVli05lhCwuzaqpLsP/AFDwTjRwKvf7an83IrN+HnWsfJbBqGm6e11iJdK/g5/RtyfpPMcG+aL7AT2y8VOJNyLxBYicO7a808SAMbRzQ8J3/FQalYc8qw1WBQiznPH0jktPJzKH/c1NkgHiBnmE7Lywn5jvBt2KZtoU3chtyw+YhrQ2u93U9k2PzgcVVeK7iOTP5TgwmkDkEFLKSg4nyGcSJ//z9eg3KXqtPydYjHJ1hOYVl/S748erb37uzB3r+EpeYrNqdgAimJk+q4gz6qU0Rzvb4D8Nni/F1x9boqmajq/u7wOvqjiE3UL8DbFtMqgtUAlA1dA+eEHefeuXEqxFcqLEJjySOY+G3fmInCS3M3fcb21/tO7o0UBgQry1gTxjZ3RbkZAnQajqJeHjaHCBNZFuAokCMax0P/NxmvB3rFVWnhsacAZdGVSE2V325Rv2Ws47P58Sz8="
-    file_glob: true
-    file: ktz-env-*.run
-    skip_cleanup: true
-    on:
-        tags: true
