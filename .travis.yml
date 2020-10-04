@@ -17,6 +17,7 @@ script:
 
 deploy:
     provider: releases
+    api_key: d1d973bbdfa704b09a50cf0bcdaf610af14c05b8
     file_glob: true
     file: ktz-env-*.run
     skip_cleanup: true
