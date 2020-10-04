@@ -1,0 +1,16 @@
+language: bash
+
+addons:
+    apt:
+        packages:
+            makeself
+
+stages:
+    build:
+
+os:
+    - linux
+
+script:
+    - bash prepare_run_script.sh
+
