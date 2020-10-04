@@ -3,13 +3,6 @@ set -e
 
 pushd $(dirname $(realpath $0))
 
-function handle_exit(){
-    echo "Scritp failed in line ${1}"
-    rm -f ./config_stage/payload.tar
-}
-
-trap "handle_exit $LINENO" EXIT
-
 if ! which makeself >/dev/null 2>&1; then
     echo "\`makeself\` is missing, please install it!"
     exit 1
@@ -35,4 +28,6 @@ if makeself --help | grep sha256 >/dev/null; then
 fi
 
 makeself "${sha}" config_stage ktz-env-$(cat VERSION).run "My env autosetup" ./install.sh
+rm -f ./config_stage/payload.tar
+echo "Run script produced!"
 
