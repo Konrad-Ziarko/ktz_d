@@ -4,10 +4,11 @@ set -e
 pushd $(dirname $(realpath $0))
 
 function handle_exit(){
+    echo "Scritp failed in line ${1}"
     rm -f ./config_stage/payload.tar
 }
 
-trap "handle_exit" EXIT
+trap "handle_exit $LINENO" EXIT
 
 if ! which makeself >/dev/null 2>&1; then
     echo "\`makeself\` is missing, please install it!"
