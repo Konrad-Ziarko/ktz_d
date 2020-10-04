@@ -28,5 +28,10 @@ ins_scr="config_stage/install.sh"
 [ ! -e ${ins_scr} ] && echo "Missing installation script, exiting!" && exit 1
 [ ! -x ${ins_scr} ] && chmod +x ${ins_scr}
 
-makeself --sha256 ./config_stage ktz-env-$(cat VERSION).run "My env autosetup" ./install.sh
+sha=""
+if makeself --help | grep sha256; then
+    sha="--sha256"
+fi
+
+makeself "${sha}" ./config_stage ktz-env-$(cat VERSION).run "My env autosetup" ./install.sh
 
