@@ -29,9 +29,9 @@ ins_scr="config_stage/install.sh"
 [ ! -x ${ins_scr} ] && chmod +x ${ins_scr}
 
 sha=""
-if makeself --help | grep sha256; then
+if makeself --help | grep sha256 >/dev/null; then
     sha="--sha256"
 fi
 
-makeself "${sha}" ./config_stage ktz-env-$(cat VERSION).run "My env autosetup" ./install.sh
+makeself "${sha}" config_stage ktz-env-$(cat VERSION).run "My env autosetup" ./install.sh
 

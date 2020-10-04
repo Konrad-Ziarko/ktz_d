@@ -12,5 +12,5 @@ os:
     - linux
 
 script:
-    - bash prepare_run_script.sh
+    - make
 
