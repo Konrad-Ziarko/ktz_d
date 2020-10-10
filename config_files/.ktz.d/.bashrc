@@ -55,18 +55,3 @@ sudo -E bash
 }
 
 
-
-
-### TEST
-
-
-
-
-### TEST
-
-
-
-
-
-cd ~
-
