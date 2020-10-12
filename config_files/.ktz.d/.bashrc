@@ -7,6 +7,11 @@ alias open='xdg-open'
 alias ttmux='tmux attach'
 alias sc='systemctl'
 # ALIASES
+# confirm command before executing from history
+shopt -s histverify
+
+
+
 
 NC='\033[0m'
 Black='\033[0;30m'        # Black
