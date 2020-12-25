@@ -5,6 +5,7 @@ set list
 set splitbelow
 set splitright
 
+set hlsearch
 " use 4 spaces instead of tabs
 set number
 set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab autoindent

@@ -28,6 +28,9 @@ Purple='\033[0;35m'
 Cyan='\033[0;36m'
 White='\033[0;37m'
 
+function ktzversion(){
+    cat ~/.ktz.d/VERSION
+}
 
 function ktzhelp(){
     use_mouse=""

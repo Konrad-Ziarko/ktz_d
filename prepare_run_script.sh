@@ -11,6 +11,7 @@ fi
 [ ! -d config_stage ] && echo "Config directory missing!" && exit 1
 
 if [ -d config_files ]; then
+    cp VERSION config_files/.ktz.d/
     tar -cvf payload.tar -C config_files/ .
     echo "Packing payload."
     mv payload.tar config_stage/ && echo "Payload loaded."
