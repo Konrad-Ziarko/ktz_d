@@ -1,5 +1,20 @@
 #!/bin/bash
 set -e
+Red='\033[0;31m'
+NC='\033[0m'
+
+function handle_error(){
+    lc="$BASH_COMMAND"
+    rc=$?
+    echo ""
+    echo -e "${Red}Error in line $1"
+    echo "Last command was [$lc] returned with code $rc"
+    echo -e -n "${NC}"
+    trap "" EXIT
+    exit 1
+}
+
+trap "handle_error $LINENO $?" ERR
 
 pushd $(dirname $(realpath $0))
 
@@ -28,7 +43,7 @@ if makeself --help | grep sha256 >/dev/null; then
     sha="--sha256"
 fi
 
-makeself "${sha}" config_stage ktz-env-$(cat VERSION).run "My env autosetup" ./install.sh
+makeself $sha config_stage ktz-env-$(cat VERSION).run "My env autosetup" ./install.sh
+rm -f ./config_files/.ktz.d/VERSION
 rm -f ./config_stage/payload.tar
 echo "Run script produced!"
-
