@@ -1,0 +1,376 @@
+.\" Manpage for BASH.
+.TH man 1 "2021" "1.0" "BASH"
+
+.SH SPECIAL PARAMETERS
+$#     # Number of arguments
+.br
+$!     # PID of last backgroup process
+.br
+$?     # Return code of last executed foreground-pipeline
+.br
+$-     # Current \fIset\fR flags
+.br
+$$     # PID of the shell - better use $BASHPID
+.br
+$*     # All arguments
+.br
+$@     # All arguments, starting from first
+.br
+$1     # First argument
+.br
+$_     # Last argument of the previous command
+
+.SH EXPANSIONS
+!$          # Expand last parameter of most recent command
+.br
+!*          # Expand all parameters of most recent command
+.br
+!-n         # Expand nth most recent command
+.br
+!n          # Expand nth command in history
+.br
+!<command>  # Expand most recent invocation of command <command>
+.br
+
+.SH GLOB
+shopt -s nullglob    # Non-matching globs are removed  ('*.foo' => '')
+.br
+shopt -s failglob    # Non-matching globs throw errors
+.br
+shopt -s nocaseglob  # Case insensitive globs
+.br
+shopt -s dotglob     # Wildcards match dotfiles ("*.sh" => ".foo.sh")
+.br
+shopt -s globstar    # Allow ** for recursive matches ('lib/**/*.rb' => 'lib/a/b/c.rb')
+
+.SH DESCRIPTOR REDIRECTIONS
+python hello.py > output.txt   # Stdout to (file)
+.br
+python hello.py >> output.txt  # Stdout to (file), append
+.br
+python hello.py 2> error.log   # Stderr to (file)
+.br
+python hello.py 2>&1           # Stderr to stdout
+.br
+python hello.py 2>/dev/null    # Stderr to (null)
+.br
+python hello.py &>/dev/null    # Stdout and stderr to (null)
+.br
+python hello.py < foo.txt      # Feed foo.txt to stdin for python
+
+.SH BRACE EXPANSION
+.SS Brace expansion precedes any other expansion, so this does not work:
+.br
+    echo {$a..$b}
+.br
+.SS We have to evaluate whole line once again:
+.br
+    $(eval echo {$a..$b})
+.br
+.SS Other examples:
+.br
+    touch test{1,2}.txt             # Create files test1.txt and test2.txt
+.br
+    echo {1..5}                     # Generate sequence 1 to 5
+.br
+    echo {01..5}                    # Generate sequence 01 to 05 with padding
+.br
+    echo {1..10..2}                 # Create sequence, with step 2
+.br
+    echo {10..1..2}                 # Shell determines step(inc/dec) from the range definition
+.br
+    echo {a..z}                     # Create alphabetical sequence
+.br
+    echo {I,want,my,money,back}     # I want my money back
+.br
+    echo _{I,want,my,money,back}    # _I _want _my _money _back
+.br
+    echo {I,want,my,money,back}_    # I_ want_ my_ money_ back_
+.br
+    echo _{I,want,my,money,back}-   # _I- _want- _my- _money- _back-
+.br
+    echo 1.{0..9}                   # 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9
+.br
+    echo ---{A..E}---               # ---A--- ---B--- ---C--- ---D--- ---E---
+.br
+    echo {A..Z}{0..9}               # A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 B0 B1 B2 B3 B4 B5 B6 B7 B8 B9 C0 C1 C2 C3 C4 C5 C6
+C7 C8 C9 D0 D1 D2 D3 D4 D5 D6 D7 D8 D9 E0 E1 E2 E3 E4 E5 E6 E7 E8 E9 F0 F1 F2 F3
+F4 F5 F6 F7 F8 F9 G0 G1 G2 G3 G4 G5 G6 G7 G8 G9 H0 H1 H2 H3 H4 H5 H6 H7 H8 H9 I0
+I1 I2 I3 I4 I5 I6 I7 I8 I9 J0 J1 J2 J3 J4 J5 J6 J7 J8 J9 K0 K1 K2 K3 K4 K5 K6 K7
+K8 K9 L0 L1 L2 L3 L4 L5 L6 L7 L8 L9 M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 N0 N1 N2 N3 N4
+N5 N6 N7 N8 N9 O0 O1 O2 O3 O4 O5 O6 O7 O8 O9 P0 P1 P2 P3 P4 P5 P6 P7 P8 P9 Q0 Q1
+Q2 Q3 Q4 Q5 Q6 Q7 Q8 Q9 R0 R1 R2 R3 R4 R5 R6 R7 R8 R9 S0 S1 S2 S3 S4 S5 S6 S7 S8
+S9 T0 T1 T2 T3 T4 T5 T6 T7 T8 T9 U0 U1 U2 U3 U4 U5 U6 U7 U8 U9 V0 V1 V2 V3 V4 V5
+V6 V7 V8 V9 W0 W1 W2 W3 W4 W5 W6 W7 W8 W9 X0 X1 X2 X3 X4 X5 X6 X7 X8 X9 Y0 Y1 Y2
+Y3 Y4 Y5 Y6 Y7 Y8 Y9 Z0 Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9
+.br
+    echo {{A..Z},{a..z}} - A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z
+
+.SH DEFAULT VALUES
+${FOO:-val}        #$FOO, or val if unset (or null)
+.br
+${FOO:=val}        # Set $FOO to val if unset (or null)
+.br
+${FOO:+val}        # val if \$FOO is set (and not null)
+.br
+${FOO:?message}    # Show error message and exit if $FOO is unset (or null)
+.br
+\fBOmitting the `:` removes the (non)nullity checks, e.g. ${FOO-val} expands to val if unset otherwise $FOO.
+
+.SH SUBSTRINGS/SLICING
+${FOO:0:3}         # Substring (position, length)
+.br
+${FOO:(-3):3}      # Substring from the right
+.SS EXAMPLE
+name='John'
+.br
+echo ${name:0:2}      # "Jo"
+.br
+echo ${name::2}       # "Jo"
+.br
+echo ${name::-1}      # "Joh"
+.br
+echo ${name:(-1)}     # "n"
+.br
+echo ${name:(-2):1}   # "h"
+
+.SH STRINGS MANIPULATION
+STR="HELLO WORLD!"
+.br
+echo ${STR,}        # "hELLO WORLD!" (lowercase 1st letter)
+.br
+echo ${STR,,}       # "hello world!" (all lowercase)
+.PP
+STR="hello world!"
+.br
+echo ${STR^}        # "Hello world!" (uppercase 1st letter)
+.br
+echo ${STR^^}       # "HELLO WORLD!" (all uppercase)
+
+.SH PATH SLICING
+STR='/path/to/foo.cpp'
+.br
+echo ${STR%.cpp}      # /path/to/foo
+.br
+echo ${STR%.cpp}.o    # /path/to/foo.o
+.br
+echo ${STR%/*}        # /path/to
+.br
+echo ${STR##*.}       # cpp (extension)
+.br
+echo ${STR##*/}       # foo.cpp (basepath)
+.br
+echo ${STR#*/}        # path/to/foo.cpp
+.br
+echo ${STR##*/}       # foo.cpp
+.br
+echo ${STR/foo/bar}   # /path/to/bar.cpp
+.br
+BASE=${SRC##*/}       # "foo.cpp" (basepath)
+.br
+DIR=${SRC%$BASE}      # "/path/to/" (dirpath)
+
+.SH SUBSTITUTION
+${FOO%suffix}          # Remove suffix
+.br
+${FOO#prefix}          # Remove prefix
+.br
+${FOO%%suffix}         # Remove long suffix
+.br
+${FOO##prefix}         # Remove long prefix
+.br
+${FOO/from/to}         # Replace first match
+.br
+${FOO//from/to}        # Replace all
+.br
+${FOO/%from/to}        # Replace suffix
+.br
+${FOO/#from/to}        # Replace prefix
+
+.SH ARRAYS
+.SS DEFINING ARRAYS
+Fruits=('Apple' 'Banana' 'Orange')
+.br
+Fruits[0]='Apple'
+.br
+Fruits[1]='Banana'
+.br
+Fruits[2]='Orange'
+.SS ACCESS ARRAY
+${Fruits[0]}           # Element #0
+.br
+${Fruits[-1]}          # Last element
+.br
+${Fruits[@]}           # All elements, space-separated
+.br
+${#Fruits[@]}          # Number of elements
+.br
+${#Fruits}             # String length of the 1st element
+.br
+${#Fruits[3]}          # String length of the Nth element
+.br
+${Fruits[@]:3:2}       # Range (from position 3, length 2)
+.br
+${!Fruits[@]}          # Keys of all elements, space-separated
+.SS ARRAY OPERATIONS
+Fruits=("${Fruits[@]}" "Watemelon")     # Push
+.br
+Fruits+=('Watermelon')                  # Also Push
+.br
+Fruits=( ${Fruits[@]/Ap*/} )            # Remove by regex match
+.br
+unset Fruits[2]                         # Remove one item
+.br
+Fruits=("${Fruits[@]}")                 # Duplicate
+.br
+Fruits=("${Fruits[@]}" "${Veggies[@]}") # Concatenate
+.br
+lines=(`cat "logfile"`)                 # Read from file
+
+.SH DICTIONARIES
+.SS DEFINING DICT
+declare -A sounds
+.br
+sounds[dog]='bark'
+.br
+sounds[cow]='moo'
+.br
+sounds[bird]='tweet'
+.br
+sounds[wolf]='howl'
+.SS DICT OPERATIONS
+${sounds[dog]}     # Dog's sound
+.br
+${sounds[@]}       # All values
+.br
+${!sounds[@]}      # All keys
+.br
+${#sounds[@]}      # Number of elements
+.br
+unset sounds[dog]  # Delete dog
+.SS ITERATE OVER VALUES
+for val in "${sounds[@]}"; do
+.br
+    echo $val
+.br
+done
+.br
+.SS Iterate over keys
+for key in "${!sounds[@]}"; do
+.br
+    echo $key
+.br
+done
+
+.SH TESTS
+[[ STRING =~ STRING ]] - Regexp
+.br
+(( NUM < NUM ))        - Numeric conditions
+
+.SH LOOPS
+.SS FOREACH
+for i in "${arrayName[@]}"; do
+.br
+    echo $i
+.br
+done
+.br
+.SS Clang style for loop
+.br
+for ((i=0;i<${#arrayName[@]};i++)); do
+.br
+    echo $i
+.br
+done
+
+.SH TRAP
+set -e
+.br
+traperr() {
+.br
+   echo "ERROR: ${BASH_SOURCE[1]} at about ${BASH_LINENO[0]} or $(caller)"
+.br
+}
+.br
+trap traperr ERR
+
+
+.SH MISC
+$(($RANDOM%200))     # Random number 0..199
+.br
+${#FOO}              # Lenght of $FOO
+.br
+sudo -E bash         # Switch to root & preserve environment
+.br
+sed -i '$a' <file>   # Add newline at the end if not present
+.SS OPTARGS
+while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+.br
+  -V | --version )
+.br
+    echo $version
+.br
+    exit
+.br
+    ;;
+.br
+  -s | --string )
+.br
+    shift; string=$1
+.br
+    ;;
+.br
+  -f | --flag )
+.br
+    flag=1
+.br
+    ;;
+.br
+esac; shift; done
+.br
+if [[ "$1" == '--' ]]; then shift; fi
+.br
+Getopts:
+.br
+while getopts ":s:p:" o; do
+.br
+    case "${o}" in
+.br
+        s)
+.br
+            s=${OPTARG}
+.br
+            ((s == 45 || s == 90)) || usage
+.br
+            ;;
+.br
+        p)
+.br
+            p=${OPTARG}
+.br
+            ;;
+.br
+        *)
+.br
+            usage
+.br
+            ;;
+.br
+    esac
+.br
+done
+.br
+shift $((OPTIND-1))
+
+
+.SH MOVING
+cd -                   # Go to previous directory
+.br
+pushd /path/to/foo/bar # Put current PWD on stack and got to directory
+.br
+popd                   # Get directory from the top of the stack and go there
+
+.SH SEE ALSO
+ktz.tar(1), ktz.tmux(1), ktz.vim(1), ktz.wsl(1)
+.SH AUTHOR
+Konrad Ziarko

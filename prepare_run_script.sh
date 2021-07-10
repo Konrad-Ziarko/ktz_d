@@ -26,8 +26,14 @@ fi
 [ ! -d config_stage ] && echo "Config directory missing!" && exit 1
 
 if [ -d config_files ]; then
-    cp VERSION config_files/.ktz.d/
-    tar -cvf payload.tar -C config_files/ .
+    tmp=$(mktemp --tmpdir=/tmp -d ktz.XXXXXXXX)
+    cp -RT config_files ${tmp}
+    cp VERSION "${tmp}/.ktz.d/"
+    for f in $(find "${tmp}/.ktz.d/man*" -type f -name "*.[0-9]"); do
+        gzip ${f}
+    done
+    tar -cvf payload.tar -C "${tmp}/" .
+    rm -rf ${tmp}
     echo "Packing payload."
     mv payload.tar config_stage/ && echo "Payload loaded."
 else
@@ -43,7 +49,7 @@ if makeself --help | grep sha256 >/dev/null; then
     sha="--sha256"
 fi
 
-makeself $sha config_stage ktz-env-$(cat VERSION).run "My env autosetup" ./install.sh
+makeself ${sha} config_stage ktz-env-$(cat VERSION).run "My env autosetup" ./install.sh
 rm -f ./config_files/.ktz.d/VERSION
 rm -f ./config_stage/payload.tar
 echo "Run script produced!"
