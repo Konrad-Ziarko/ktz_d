@@ -91,3 +91,5 @@ augroup Binary
   au BufWritePost *.bin if &bin | %!xxd
   au BufWritePost *.bin set nomod | endif
 augroup END
+
+au BufReadPost * if &readonly | set noma | endif
