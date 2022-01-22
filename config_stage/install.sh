@@ -1,5 +1,5 @@
 #!/bin/bash
-# this script is lauched on installation target
+# this script is launched on installation target
 source ./definitions.sh
 set -e
 tar -xvf ./payload.tar -C "${HOME}"

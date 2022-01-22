@@ -11,6 +11,8 @@ alias sudo='sudo '
 alias open='xdg-open'
 alias ttmux='tmux attach'
 alias sc='systemctl'
+alias pu='pushd'
+alias po='popd'
 # ALIASES
 # confirm command before executing from history
 shopt -s histverify
